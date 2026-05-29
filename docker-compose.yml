@@ -9,42 +9,48 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
-      - /mnt/data/caddy:/data
-      - /mnt/data/caddy_config:/config
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - /mnt/data/caddy/data:/data  # ✅ Usando /mnt/data
+      - /mnt/data/caddy/config:/config  # ✅ Usando /mnt/data
 
   nextcloud:
     image: nextcloud:latest
     container_name: nextcloud
     restart: unless-stopped
+    depends_on:
+      - db
     volumes:
-      - /mnt/data/nextcloud_data:/var/www/html/data
-      - /mnt/data/nextcloud_config:/var/www/html/config
+      - /mnt/data/nextcloud/data:/var/www/html/data  # ✅ Usando /mnt/data
+      - /mnt/data/nextcloud/config:/var/www/html/config  # ✅ Usando /mnt/data
     environment:
       - MYSQL_PASSWORD=${NC_DB_PASSWORD}
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - MYSQL_HOST=db
+    ports:
+      - "8080:80"
 
   db:
     image: mariadb:10.11
     container_name: nextcloud_db
     restart: unless-stopped
-    command: --transaction-isolation=RED-COMMITTED --log-bin=ROW
+    command: --transaction-isolation=READ-COMMITTED --log-bin=ROW
     volumes:
-      - /mnt/dados/nextcloud_mysql:/var/lib/mysql
+      - /mnt/data/mariadb:/var/lib/mysql  # ✅ Usando /mnt/data
     environment:
-      - MYSQL_ROOT_PASSWORD=${NC_ROOT_PASSWORD}
-      - MYSQL_PASSWORD=${NC_DB_PASSWORD}
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
+      - MARIADB_ROOT_PASSWORD=${NC_ROOT_PASSWORD}
+      - MARIADB_PASSWORD=${NC_DB_PASSWORD}
+      - MARIADB_DATABASE=nextcloud
+      - MARIADB_USER=nextcloud
+      - TZ=America/Sao_Paulo
 
   vaultwarden:
     image: vaultwarden/server:latest
     container_name: vaultwarden
     restart: unless-stopped
     volumes:
-    - /mnt/data/vaultwarden:/data
+      - /mnt/data/vaultwarden:/data  # ✅ Usando /mnt/data
     environment:
       - WEBSOCKET_ENABLED=true
-    
+    ports:
+      - "8081:80"

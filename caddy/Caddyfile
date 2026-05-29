@@ -1,6 +1,9 @@
-nextcloud.seudominio.internal {
- reverse_proxy nextcloud:80
+# Domínio do Nextcloud
+nextcloud.duciferzinho.com {
+    reverse_proxy nextcloud:80
 }
-vaultwarden.seudominio.internal {
- reverse_proxy vaultwarden:80
+
+# Domínio do Vaultwarden
+vaultwarden.duciferzinho.com {
+    reverse_proxy vaultwarden:80
 }
