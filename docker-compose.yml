@@ -27,8 +27,6 @@ services:
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - MYSQL_HOST=db
-    ports:
-      - "8080:80"
 
   db:
     image: mariadb:10.11
@@ -52,5 +50,3 @@ services:
       - /mnt/data/vaultwarden:/data  # ✅ Usando /mnt/data
     environment:
       - WEBSOCKET_ENABLED=true
-    ports:
-      - "8081:80"
