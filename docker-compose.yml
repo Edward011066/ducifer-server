@@ -11,7 +11,7 @@ services:
     volumes:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile
       - /mnt/data/caddy:/data
-      - /mnt/dados/caddy_config:/config
+      - /mnt/data/caddy_config:/config
 
   nextcloud:
     image: nextcloud:latest
