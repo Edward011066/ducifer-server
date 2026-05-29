@@ -27,6 +27,7 @@ services:
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - MYSQL_HOST=db
+      - APACHE_DISABLE_REWRITE_IP=1 #Não obrigatório agora, mas ajuda depois com proxy reverso.
 
   db:
     image: mariadb:10.11
@@ -50,3 +51,4 @@ services:
       - /mnt/data/vaultwarden:/data  # ✅ Usando /mnt/data
     environment:
       - WEBSOCKET_ENABLED=true
+      - SIGNUPS_ALLOWED=false #usuários não poderão criar contas aqui!
