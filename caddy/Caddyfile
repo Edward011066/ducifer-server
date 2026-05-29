@@ -1,0 +1,6 @@
+nextcloud.seudominio.internal {
+ reverse_proxy nextcloud:80
+}
+vaultwarden.seudominio.internal {
+ reverse_proxy vaultwarden:80
+}

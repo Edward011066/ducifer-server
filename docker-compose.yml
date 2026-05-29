@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - /mnt/data/caddy:/data
+      - /mnt/dados/caddy_config:/config
+
+  nextcloud:
+    image: nextcloud:latest
+    container_name: nextcloud
+    restart: unless-stopped
+    volumes:
+      - /mnt/data/nextcloud_data:/var/www/html/data
+      - /mnt/data/nextcloud_config:/var/www/html/config
+    environment:
+      - MYSQL_PASSWORD=${NC_DB_PASSWORD}
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=db
+
+  db:
+    image: mariadb:10.11
+    container_name: nextcloud_db
+    restart: unless-stopped
+    command: --transaction-isolation=RED-COMMITTED --log-bin=ROW
+    volumes:
+      - /mnt/dados/nextcloud_mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${NC_ROOT_PASSWORD}
+      - MYSQL_PASSWORD=${NC_DB_PASSWORD}
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    volumes:
+    - /mnt/data/vaultwarden:/data
+    environment:
+      - WEBSOCKET_ENABLED=true
+    
