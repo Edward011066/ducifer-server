@@ -1,15 +1,16 @@
 services:
-  caddy:
-    image: caddy:latest
-    container_name: caddy
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
-      - /mnt/data/caddy/data:/data  # ✅ Usando /mnt/data
-      - /mnt/data/caddy/config:/config  # ✅ Usando /mnt/data
+# caddy é um redirecionamento de portas. Porém só deve ser usado em maquinas que já tem IP publico. Maquinas com #ip fechado que precisam de tunelamento, por exemplo, via claudflare. A própria claudflare cria as rotas, nesse #caso manter o caddy comentando para não ser usado no projeto.
+#  caddy:
+#    image: caddy:latest
+#    container_name: caddy
+#    restart: unless-stopped
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    volumes:
+#      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+#      - /mnt/data/caddy/data:/data  # ✅ Usando /mnt/data
+#      - /mnt/data/caddy/config:/config  # ✅ Usando /mnt/data
 
   nextcloud:
     image: nextcloud:latest
@@ -49,12 +50,10 @@ services:
       - /mnt/data/vaultwarden:/data  # ✅ Usando /mnt/data
     environment:
       - WEBSOCKET_ENABLED=true
-      - SIGNUPS_ALLOWED=false #usuários não poderão criar contas aqui!
-      
+      - SIGNUPS_ALLOWED=false #Primeiro deixa True para criar a conta, após isso, deixa False e reinicia containers.
+
   cloudflared:
     image: cloudflare/cloudflared:latest
     container_name: cloudflared
     restart: unless-stopped
     command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
-    # A linha abaixo é recomendada para garantir que o container veja a rede do host corretamente.
-    network_mode: host
