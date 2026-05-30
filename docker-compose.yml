@@ -52,3 +52,11 @@ services:
     environment:
       - WEBSOCKET_ENABLED=true
       - SIGNUPS_ALLOWED=false #usuários não poderão criar contas aqui!
+      
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token eyJhIjoiMjI4ZjJmNTQ5Mjk0MzBkYWNmNmQ5NmFhYjY1MjA4MzYiLCJ0IjoiZWU2OWQ5OTYtOWY5Yi00NTgyLWIyNDUtZTkwMmM1OWJlM2E2IiwicyI6Ik9HSTNOekkwTkRVdFptRXpaQzAwTVdWakxUbG1aRGt0T0dVM01HUTFaR1U1WWpreiJ9
+    # A linha abaixo é recomendada para garantir que o container veja a rede do host corretamente.
+    network_mode: host
