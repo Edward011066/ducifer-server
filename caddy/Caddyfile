@@ -1,9 +1,9 @@
 # Domínio do Nextcloud
-nextcloud.duciferzinho.com {
+nextcloud.servidoresduciferzinho.cloud {
     reverse_proxy nextcloud:80
 }
 
 # Domínio do Vaultwarden
-vaultwarden.duciferzinho.com {
+vaultwarden.servidoresduciferzinho.cloud {
     reverse_proxy vaultwarden:80
 }
