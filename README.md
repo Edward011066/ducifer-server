@@ -119,7 +119,7 @@ CLOUDFLARE_TUNNEL_TOKEN=seu_token_aqui
 ```yaml
 services:
   nextcloud:
-    image: nextcloud:latest
+    build: .
     container_name: nextcloud
     restart: unless-stopped
     depends_on:
@@ -181,6 +181,28 @@ networks:
 
 ---
 
+### NOTA DE CONTEXTO:
+Perceba que na primeira linha do docker-compose.yml escrevemos 
+```yaml
+services:
+  nextcloud:
+    build: .
+Quando na verdade o mais comum seria:
+```
+Isso acontece porque na raiz desse projeto temos o arquivo Dockerfile
+```dockerfile
+FROM nextcloud:latest
+
+RUN apt-get update && \
+    apt-get install -y ffmpeg && \
+    rm -rf /var/lib/apt/lists/*
+```
+Perceba que o arquivo Dockerfile contém a então imagem nextcloud:latest, ou seja, ainda vamos baixar e a imagem mais recente do nextcloud. Mas porque usar dockerfile para isso ao invés de inserir diretamente no docker-compose.yml? Porque logo em seguida ainda no Dockerfile executamos RUN apt-get update e instalamos o ffmpeg. O ffmpeg é fundamental para que o Nextcloud gere miniaturas (thumbnails) de vídeos MP4, MOV e outros formatos suportados. Caso contrário você veria miniaturas apenas de imagens em geral. E vídeos MP4, MOV, AVI não iriam exibir thumbnails. O nextcloud precisa do ffmpeg para conseguir gerar thumbnails de vídeos.
+```yaml
+services:
+  nextcloud:
+    image:Nextcloud:latest 
+```
 ### Passo 7: Configurar o Domínio e o Túnel na Cloudflare
 1. **Domínio:** Adicione seu domínio na Cloudflare e altere os Nameservers no seu registrador.
 2. **Tunnel:** No painel Zero Trust, crie um túnel, selecione Docker e copie o **Token** para o seu `.env`.
