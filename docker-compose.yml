@@ -27,6 +27,7 @@ services:
       - MYSQL_USER=nextcloud
       - MYSQL_HOST=db
       - APACHE_DISABLE_REWRITE_IP=1 #Não obrigatório agora, mas ajuda depois com proxy reverso.
+      - REDIS_HOST=redis
 
   nextcloud-cron:
     image: nextcloud:latest
@@ -38,6 +39,11 @@ services:
       - /mnt/data/nextcloud/data:/var/www/html/data
       - /mnt/data/nextcloud/config:/var/www/html/config
     entrypoint: /cron.sh
+
+  redis:
+    image: redis:7-alpine
+    container_name: nextcloud_redis
+    restart: unless-stopped
 
 
   db:
